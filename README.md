@@ -183,7 +183,7 @@ This guidance utilizes the `AdministratorAccess` role for deployment. For use in
 ### Plugin Installation
 1. From the main page of the GitHub repository, click **Releases** . From the latest listed releae, download the SAP ABAP Assistant plugin zip file (for e.g. sap-abap-assistant-V1_0_17.zip) from the **Assets** section. Save the plugin zip file in your local file system.
 
-2. Open Eclipse IDE and choose **Help -> Install New Software**. Choose the **Add…** button. In the next dialog window, choose **Archive…** and select the zip file that you downloaded. Choose **Add**
+2. Open Eclipse IDE and choose **Help -> Install New Software**. Choose the **Add…** button. In the next dialog window, choose **Archive…** and select the zip file that you downloaded. Choose **Add**.
 
     ![Eclipse Installation Wizard](assets/images/plugin-installation/Eclipse_Installation_Wizard.png)
 
