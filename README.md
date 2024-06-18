@@ -1,215 +1,324 @@
-# Guidance Title (required)
+# Guidance for Improving Application Development Productivity with the SAP ABAP Assistant on AWS
 
-The Guidance title should be consistent with the title established first in Alchemy.
+## Table of Content 
 
-**Example:** *Guidance for Product Substitutions on AWS*
-
-This title correlates exactly to the Guidance it’s linked to, including its corresponding sample code repository. 
-
-
-## Table of Content (required)
-
-List the top-level sections of the README template, along with a hyperlink to the specific section.
-
-### Required
-
-1. [Overview](#overview-required)
+1. [Overview](#overview)
+    - [Architecture](#architecture)
     - [Cost](#cost)
-2. [Prerequisites](#prerequisites-required)
-    - [Operating System](#operating-system-required)
-3. [Deployment Steps](#deployment-steps-required)
-4. [Deployment Validation](#deployment-validation-required)
-5. [Running the Guidance](#running-the-guidance-required)
-6. [Next Steps](#next-steps-required)
-7. [Cleanup](#cleanup-required)
+2. [Prerequisites](#prerequisites)
+    - [Operating System](#operating-system)
+    - [Third-party tools](#third-party-tools)
+3. [Deployment Steps](#deployment-steps)
+4. [Deployment Validation](#deployment-validation)
+5. [Setup](#setup)
+    - [Authentication](#authentication)
+    - [Plugin Installation](#plugin-installation)
+6. [Running the Guidance](#running-the-guidance)
+7. [Next Steps](#next-steps)
+8. [Cleanup](#cleanup)
+9. [Notices](#notices)
+10. [Authors](#authors)
 
-***Optional***
+## Overview
 
-8. [FAQ, known issues, additional considerations, and limitations](#faq-known-issues-additional-considerations-and-limitations-optional)
-9. [Revisions](#revisions-optional)
-10. [Notices](#notices-optional)
-11. [Authors](#authors-optional)
+SAP customers are embarking on digital transformation projects, including RISE with SAP. To accelerate and de-risk transformation projects, customers want to understand ABAP programs in their SAP systems to assess the impact on business processes. Understanding existing custom code can be challenging for several reasons: 1/ lack of quality documentation for ABAP programs, 2/ unavailability of resources that built the custom code, and 3/ lack of resources needed to review and understand the legacy custom code. Also, ABAP developers spend significant time searching the existing codebase and forums for code snippets to incorporate into the ABAP programs. These challenges reduce  productivity and impact project deadlines.
 
-## Overview (required)
+With the SAP ABAP Assistant using Amazon Bedrock, SAP customers can accelerate delivery of new ABAP code by generating code snippets with natural language prompts, and generate documentation for custom and standard ABAP programs, improving productivity and accelerating transformation
 
-1. Provide a brief overview explaining the what, why, or how of your Guidance. You can answer any one of the following to help you write this:
+### Architecture
 
-    - **Why did you build this Guidance?**
-    - **What problem does this Guidance solve?**
+![Architecture of SAP ABAP Assistant](/assets/images/Architecture.png)
 
-2. Include the architecture diagram image, as well as the steps explaining the high-level overview and flow of the architecture. 
-    - To add a screenshot, create an ‘assets/images’ folder in your repository and upload your screenshot to it. Then, using the relative file path, add it to your README. 
+1. **Install AWS Command Line Interface (AWS CLI) v2:** SAP ABAP Developer installs AWS CLI v2 in Windows or Mac and configures the AWS CLI to authenticate with the AWS IAM Identity Center using `aws configure sso` command.
 
-### Cost ( required )
+2. **Authentication:** SAP ABAP Developer authenticates with the AWS IAM Identity Center using the AWS CLI with `aws sso login --profile <profile-name>` command.
 
-This section is for a high-level cost estimate. Think of a likely straightforward scenario with reasonable assumptions based on the problem the Guidance is trying to solve. Provide an in-depth cost breakdown table in this section below ( you should use AWS Pricing Calculator to generate cost breakdown ).
+3. **Install SAP ABAP Assistant Plugin:** SAP ABAP developer downloads, installs and configures the SAP ABAP Assistant plugin in Eclipse Integrated Development Environment (IDE) .
 
-Start this section with the following boilerplate text:
+4. **Invoke SAP ABAP Assistant:** SAP ABAP Developer authenticates and connects one or more SAP system hosted in AWS VPC or on-premises or SAP Business Technology Platform (BTP) ABAP environment to Eclipse IDE. 
+The developer opens an ABAP program in Eclipse IDE, and selects a block of ABAP code for which the documentation has to be generated. For code generation, the developer writes prompt in simple English in the ABAP program. The developer invokes SAP ABAP Assistant plugin using “Ask Bedrock” menu in Eclipse IDE.
 
-_You are responsible for the cost of the AWS services used while running this Guidance. As of <month> <year>, the cost for running this Guidance with the default settings in the <Default AWS Region (Most likely will be US East (N. Virginia)) > is approximately $<n.nn> per month for processing ( <nnnnn> records )._
+5. **Invoke Foundation Model:** The SAP ABAP Assistant plugin sends a request with the selected prompts or ABAP code to Amazon Bedrock to call large language models (LLMs) hosted by Amazon Bedrock, such as the Anthropic’s Claude model to produce ABAP code or documentation.
 
-Replace this amount with the approximate cost for running your Guidance in the default Region. This estimate should be per month and for processing/serving resonable number of requests/entities.
+6. **Response Generation:** The SAP ABAP Assistant returns the response back to the ABAP editor in case of code generation or displays documentation in a console in Eclipse IDE. The developer will validate the generated code and if required, modify it to the specific use case. 
 
-Suggest you keep this boilerplate text:
+### Cost
+
 _We recommend creating a [Budget](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html) through [AWS Cost Explorer](https://aws.amazon.com/aws-cost-management/aws-cost-explorer/) to help manage costs. Prices are subject to change. For full details, refer to the pricing webpage for each AWS service used in this Guidance._
 
-### Sample Cost Table ( required )
+### Sample Cost Table
 
-**Note : Once you have created a sample cost table using AWS Pricing Calculator, copy the cost breakdown to below table and upload a PDF of the cost estimation on BuilderSpace.**
+The following table provides a sample cost breakdown for deploying this Guidance with the default parameters in the US East (N. Virginia) Region
 
-The following table provides a sample cost breakdown for deploying this Guidance with the default parameters in the US East (N. Virginia) Region for one month.
 
-| AWS service  | Dimensions | Cost [USD] |
-| ----------- | ------------ | ------------ |
-| Amazon API Gateway | 1,000,000 REST API calls per month  | $ 3.50month |
-| Amazon Cognito | 1,000 active users per month without advanced security feature | $ 0.00 |
+| AWS service  | Price per 1000 input tokens [USD] | Price per 1000 input tokens [USD] |
+| ------------ | ----------------------------------| --------------------------------- |
+| Amazon Bedrock - Claude 3 Sonnet | $ 0.003 | $ 0.015 |
 
-## Prerequisites (required)
+## Prerequisites
 
-### Operating System (required)
+### Operating System
+You can use SAP ABAP Assistant plugin in **Eclipse IDE** on **MacOS** or **Windows** Operating System
 
-- Talk about the base Operating System (OS) and environment that can be used to run or deploy this Guidance, such as *Mac, Linux, or Windows*. Include all installable packages or modules required for the deployment. 
-- By default, assume Amazon Linux 2/Amazon Linux 2023 AMI as the base environment. All packages that are not available by default in AMI must be listed out.  Include the specific version number of the package or module.
+### Third-party tools
 
-**Example:**
-“These deployment instructions are optimized to best work on **<Amazon Linux 2 AMI>**.  Deployment in another OS may require additional steps.”
+1. Install [Eclipse IDE](https://www.eclipse.org/downloads/packages/) with version 2023-09 (4.29.0) and above
+2. Install [ABAP Development tools for Eclipse](https://tools.hana.ondemand.com/#abap)
+3. Create an [ABAP project in Eclipse IDE](https://help.sap.com/docs/abap-cloud/abap-development-tools-user-guide/abap-project?version=sap_btp) to connect with the ABAP system
 
-- Include install commands for packages, if applicable.
+### AWS account requirements
 
+For this guidance , we will be using the `us-east-1` region.
 
-### Third-party tools (If applicable)
+1. Enable [AWS IAM Identity Center](https://docs.aws.amazon.com/singlesignon/latest/userguide/get-set-up-for-idc.html). Make a note of the **Instance ARN** and **AWS Access portal URL**
+
+![Settings page of IAM Identity Center](/assets/images/prerequisites/IAM_Identity_Center_Settings.png)
+
+2. [Access to Amazon Bedrock foundation model](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html): Request access to Anthropic Claude 3 Sonnet foundation model from the Amazon Bedrock console in your AWS account. Alternatively, you can use Anthropic Calude 3 Haiku, Anthropic Claude v2, Anthropic Claude v2.1, Jurassic-2 Mid or Jurassic-2 Ultra foundation models.
+
+### AWS Command Line Interface (AWS CLI)
+
+Install [AWS Command Line Interface v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) . To confirm the installation, open your preferred terminal and enter `aws --version` command 
+
+```
+C:\> aws --version
+aws-cli/2.15.30 Python/3.11.6 Windows/10 exe/AMD64 prompt/off
+```
+## Deployment Steps
 
-*List any installable third-party tools required for deployment.*
+1. Clone the GitHub repository to access the AWS CloudFormation deployment template.
+```
+git clone https://github.com/aws-solutions-library-samples/guidance-for-improving-application-development-productivity-with-the-sap-abap-assistant-on-aws.git
+cd ./guidance-for-improving-application-development-productivity-with-the-sap-abap-assistant-on-aws
+```
 
+2. Deploy the AWS CloudFormation Stack
+This guidance utilizes the `AdministratorAccess` role for deployment. For use in a production environment, refer to the [security best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html) in the AWS Identity and Access Management (IAM) documentation and modify the IAM roles as needed.
 
-### AWS account requirements (If applicable)
+* Sign in to the [AWS CloudFormation console](https://console.aws.amazon.com/cloudformation/home)
+* Create Stack > Upload the `guidance-for-improving-application-development-productivity-with-the-sap-abap-assistant-on-aws/deployment/prereq-sap-abap-assistant-on-aws.yml` file
+* Input the following values:
+    * Enter `sap-abap-assistant` in the stack name
+    * For **InstanceArn** parameter, enter the Instance ARN of AWS IAM Identity Center
+    * The **PermissionSetName** parameter is populated with the value `ABAPAssistantAccess`
+    * The **SessionDuration** parameter is populated with the value `PT8H`
 
-*List out pre-requisites required on the AWS account if applicable, this includes enabling AWS regions, requiring ACM certificate.*
+* Deploy the CloudFormation stack
 
-**Example:** “This deployment requires you have public ACM certificate available in your AWS account”
+## Deployment Validation
 
-**Example resources:**
-- ACM certificate 
-- DNS record
-- S3 bucket
-- VPC
-- IAM role with specific permissions
-- Enabling a Region or service etc.
+* Open the AWS CloudFormation console and verify the status of the stack deployment with the name starting with `sap-abap-assistant`.
+* If deployment is successful, you should see a permission set with the name `ABAPAssistantAccess` in the AWS IAM Identity Center.
+* [Optional] - You can see the detailed output in the AWS CloudFormation Stack `sap-abap-assistant` using below AWS CLI command.
+    ```
+    aws cloudformation describe-stacks --stack-name sap-abap-assistant --query 'Stacks[0].Outputs' --output table --no-cli-pager
+    ```
 
+## Setup
+1. [Assign permission set](https://docs.aws.amazon.com/singlesignon/latest/userguide/set-up-single-sign-on-access-to-accounts.html) created above to the user or group in IAM Identity Center.
 
-### aws cdk bootstrap (if sample code has aws-cdk)
+### Authentication
+1. Open your preferred terminal in MacOS or Windows Operating System to run the AWS CLI commands
 
-<If using aws-cdk, include steps for account bootstrap for new cdk users.>
+2. Enter the command `aws configure sso` to create the SSO token provider configuration.
 
-**Example blurb:** “This Guidance uses aws-cdk. If you are using aws-cdk for first time, please perform the below bootstrapping....”
+     ```
+    $ aws configure sso
+    SSO session name (Recommended): abap-assistant-sso
+    SSO start URL [None]: https://enter-your-sso-start-url.awsapps.com/start
+     SSO region [None]: us-east-1
+    SSO registration scopes [None]: sso:account:access
+    ```
+3. The AWS CLI attempts to open your default browser and begin the login process for your IAM Identity Center account.
 
-### Service limits  (if applicable)
+4. The AWS CLI displays the AWS accounts available for you to use. If you are authorized to use only one account, the AWS CLI selects that account for you automatically and skips the prompt
+    ```
+    There are 2 AWS accounts available to you.
+    > DeveloperAccount, developer-account-admin@example.com (123456789011) 
+    ProductionAccount, production-account-admin@example.com (123456789022)
+    ```
+5. The AWS CLI confirms your account choice, and displays the IAM roles that are available to you in the selected account. Use the arrow keys to select the IAM role `ABAPAssistantAccess` and press <ENTER>. If the selected account lists only one role, the AWS CLI selects that role for you automatically and skips the prompt.
+    ```
+    Using the account ID 123456789011
+    There are 2 roles available to you.
+    > ReadOnly
+    ABAPAssistantAccess
+    ```
+6. Specify the default output format, the default AWS Region to send commands to, and providing a name for the profile so you can reference this profile from among all those defined on the local computer
 
-<Talk about any critical service limits that affect the regular functioning of the Guidance. If the Guidance requires service limit increase, include the service name, limit name and link to the service quotas page.>
+    ```
+    CLI default client Region [None]: us-east-1
+    CLI default output format [None]: json
+    CLI profile name [ABAPAssistantAccess-123456789011]: abap-assistant
+     ```
 
-### Supported Regions (if applicable)
+7. A final message describes the completed profile configuration.
 
-<If the Guidance is built for specific AWS Regions, or if the services used in the Guidance do not support all Regions, please specify the Region this Guidance is best suited for>
+    ```
+    To use this profile, specify the profile name using --profile, as shown:
 
+    aws s3 ls --profile abap-assistant
+     ```
+8. This results in creating the sso-session section with the name `abap-assistant-sso` and named profile with the name `abap-assistant` in the credentials file located at ~/.aws/credentials on macOS, or at C:\Users\USERNAME\.aws\credentials on Windows.
 
-## Deployment Steps (required)
+     ```
+    [profile abap-assistant]
+    sso_session = abap-assistant-sso
+    sso_account_id = 123456789011
+    sso_role_name = ABAPAssistantAccess
+    region = us-east-1
+    output = json
+                
+    [sso-session abap-assistant-sso]
+    sso_start_url = https://enter-your-sso-start-url.awsapps.com/start
+    sso_region = us-east-1
+    so_registration_scopes = sso:account:access
+    ``` 
 
-Deployment steps must be numbered, comprehensive, and usable to customers at any level of AWS expertise. The steps must include the precise commands to run, and describe the action it performs.
+9. To reauthenticate after the session expiry, you need to use the following command.
+    ```
+    aws sso login --profile abap-assistant
+    ```
 
-* All steps must be numbered.
-* If the step requires manual actions from the AWS console, include a screenshot if possible.
-* The steps must start with the following command to clone the repo. ```git clone xxxxxxx```
-* If applicable, provide instructions to create the Python virtual environment, and installing the packages using ```requirement.txt```.
-* If applicable, provide instructions to capture the deployed resource ARN or ID using the CLI command (recommended), or console action.
+### Plugin Installation
+1. Download the SAP ABAP Assistant plugin from the Github releases section.
 
- 
-**Example:**
+2. Open Eclipse IDE and choose **Help -> Install New Software**. Choose the **Add…** button. In the next dialog window, choose **Archive…** and select the zip file that you downloaded. Choose **Add**
 
-1. Clone the repo using command ```git clone xxxxxxxxxx```
-2. cd to the repo folder ```cd <repo-name>```
-3. Install packages in requirements using command ```pip install requirement.txt```
-4. Edit content of **file-name** and replace **s3-bucket** with the bucket name in your account.
-5. Run this command to deploy the stack ```cdk deploy``` 
-6. Capture the domain name created by running this CLI command ```aws apigateway ............```
+    ![Eclipse Installation Wizard](assets/images/plugin-installation/Eclipse_Installation_Wizard.png)
 
+3. Uncheck the option **Group items by category**. You will see SAP ABAP Assistant plugin listed along with the version number Select the plugin and choose **Next**
 
+    ![SAP ABAP Assistant in Eclipse Installation Wizard](assets/images/plugin-installation/SAP_ABAP_Assistant_in_Eclipse_Installation_Wizard.png)
 
-## Deployment Validation  (required)
+4. In the subsequent windows, choose **Next**, and accept the terms of the license agreement and choose **Finish**. Eclipse will start the installation of plugin. You can see the status of installation at the bottom right corner of the Eclipse IDE. Eclipse will prompt to trust the artifacts. Choose **Trust Selected**. 
 
-<Provide steps to validate a successful deployment, such as terminal output, verifying that the resource is created, status of the CloudFormation template, etc.>
+    ![Trust Artifacts in Eclipse](assets/images/plugin-installation/Trust_Artifacts_in_Eclipse.png)
 
+5. You will then see a dialog box asking you to restart Eclipse. Choose **Restart Now**.
+After the Eclipse has restarted, you can see a menu bar at the top called **Ask Bedrock** with two submenus – **ABAP Code Assistant** and **ABAP Documentation Assistant**
 
-**Examples:**
+    ![SAP ABAP Assistant Menu in Eclipse](assets/images/plugin-installation/SAP_ABAP_Assistant_Menu_in_Eclipse.png)
 
-* Open CloudFormation console and verify the status of the template with the name starting with xxxxxx.
-* If deployment is successful, you should see an active database instance with the name starting with <xxxxx> in        the RDS console.
-*  Run the following CLI command to validate the deployment: ```aws cloudformation describe xxxxxxxxxxxxx```
+### Plugin Configuration
+Before using ABAP Assistant plugin , you need to set up the plugin preferences in the Eclipse IDE. Choose **Windows -> Preferences** (on Windows), or **Eclipse -> Settings** (on MacOS) to bring up the preferences dialog page of Eclipse. In the left pane , choose **SAP ABAP Assistant**. Input the following settings :
 
+* **AWS Region** – Enter `us-east-1`. Refer this [documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions) for list of AWS region codes. 
 
+* **Model ID** – Enter `anthropic.claude-3-sonnet-20240229-v1:0`. The plugin currently supports Anthropic Claude (v2, v2.1, Claude 3 Sonnet and Claude 3 Haiku) and Jurassic-2 (mid and ultra) models . Refer [this documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html) for list of Amazon bedrock Model IDs. 
 
-## Running the Guidance (required)
+* **AWS Profile** – Enter the name of the AWS profile `abap-assistant` that you created
 
-<Provide instructions to run the Guidance with the sample data or input provided, and interpret the output received.> 
+The following screenshot shows the SAP ABAP Assistant plugin preferences page.
 
-This section should include:
+![SAP ABAP Assistant Preferences Page](assets/images/plugin-installation/SAP_ABAP_Assistant_Preferences_Page.png)
 
-* Guidance inputs
-* Commands to run
-* Expected output (provide screenshot if possible)
-* Output description
+## Running the Guidance
 
+### ABAP Code Assistant
+In the ABAP perspective of Eclipse, open an existing ABAP program or create a new ABAP program. Enter the below prompts to generate ABAP code to retreive and display the material data from table MARA present in SAP S/4HANA system.
+```
+* Define a structure ty_material with fields MATNR MTART BRGEW GEWEI
+* Define a table lt_material from ty_material
+* Select MATNR MTART BRGEW GEWEI from table MARA into lt_material
+* Display data in ALV format using CL_SALV_TABLE with appropriate parameters
 
+```
+In the Eclipse editor, select the lines of written text using your cursor and then select **Ask Bedrock -> ABAP Code Assistant** 
 
-## Next Steps (required)
+![Selecting the ABAP Code Assistant menu in eclipse to generate the ABAP Code](assets/images/running-plugin/ABAP_Code_Generation.png)
 
-Provide suggestions and recommendations about how customers can modify the parameters and the components of the Guidance to further enhance it according to their requirements.
+The ABAP assistant plugin will generate ABAP code after the last line of comment. You will see the generated ABAP code resembles the example in the following screenshot. 
 
+![ABAP Code generated by SAP ABAP Assistant](assets/images/running-plugin/ABAP_Code_Generated.png)
 
-## Cleanup (required)
+### ABAP Documentation Assistant
+To generate the documentation, open the ABAP program `RH_GET_ADDRESS` in Eclipse and select all the lines of ABAP code. Then select **Ask Bedrock -> ABAP Documentation Assistant**. 
 
-- Include detailed instructions, commands, and console actions to delete the deployed Guidance.
-- If the Guidance requires manual deletion of resources, such as the content of an S3 bucket, please specify.
+![Selecting the ABAP Documentation Assistant menu in eclipse to generate the ABAP documentation](assets/images/running-plugin/ABAP_Documentation_Generation.png)
 
+You can see the ABAP documentation for the selected lines of ABAP code in a console named **BEROCK_ABAP_CONSOLE** at the bottom of the eclipse IDE. You will see the documentation that resembles the example in the following screenshot.
 
+![ABAP Documentation generated by SAP ABAP Assistant](assets/images/running-plugin/ABAP_Documentation_Generated.png)
 
-## FAQ, known issues, additional considerations, and limitations (optional)
+## Next Steps
 
+You can modify the source code as per your requirements and generate a new version of the plugin. For example, you can add support to an additional foundation model (for e.g. Cohere Command). You can create a custom model by training a foundation model using Amazon Bedrock and then input the custom model ID in the ABAP Assistant plugin preferences in Eclipse.
 
-**Known issues (optional)**
+1. Clone the GitHub repository to access the code. 
+```
+git clone https://github.com/aws-solutions-library-samples/guidance-for-improving-application-development-productivity-with-the-sap-abap-assistant-on-aws.git
+cd ./guidance-for-improving-application-development-productivity-with-the-sap-abap-assistant-on-aws
+```
 
-<If there are common known issues, or errors that can occur during the Guidance deployment, describe the issue and resolution steps here>
+2. Download and install **Eclipse IDE for Eclipse Committers** from this link with version 2023-09 and above.
 
+3. Import the source code in Eclipse IDE for Eclipse Committers. Choose `File -> Import -> Maven -> Existing Maven projects. 
 
-**Additional considerations (if applicable)**
+    ![Import wizard in Eclipse IDE for Eclipse Committers](assets/images/next-steps/import-wizard.png)
 
-<Include considerations the customer must know while using the Guidance, such as anti-patterns, or billing considerations.>
+4. Browser to the folder which has the downloaded source code projects. Choose **Finish**. 
 
-**Examples:**
+    ![Import soure code in Eclipse IDE for Eclipse Committers](assets/images/next-steps/source-code-import.png)
 
-- “This Guidance creates a public AWS bucket required for the use-case.”
-- “This Guidance created an Amazon SageMaker notebook that is billed per hour irrespective of usage.”
-- “This Guidance creates unauthenticated public API endpoints.”
+5. The imported projects can be seen in the Package Explorer view in Eclipse IDE for Eclipse Committers.
 
+    ![Imported projects in Eclipse IDE for Eclipse Committers](assets/images/next-steps/maven-imported-projects.png)
 
-Provide a link to the *GitHub issues page* for users to provide feedback.
+6. Make the required code changes as per your requirements in the project `com.demo.abap_assistant_plugin`. 
 
+7. Update the Plugin version in `com.demo.abap_assistant_plugin -> plugin.xml` and in `com.demo.abap_assistant_feature -> feature.xml`
 
-**Example:** *“For any feedback, questions, or suggestions, please use the issues tab under this repo.”*
+    ![update version number in plugin.xml file of plugin project](assets/images/next-steps/update-version-plugin-project.png)
 
-## Revisions (optional)
+    ![update version number in feature.xml file of feature project](assets/images/next-steps/update-version-feature-project.png)
 
-Document all notable changes to this project.
+8. To generate a new version, right click on  `com.demo.abap_assistant_plugin.releng -> Run As -> Maven Build`. In the **Goals** enter `tycho-versions:update-pom` and Choose **Run**.
 
-Consider formatting this section based on Keep a Changelog, and adhering to Semantic Versioning.
+    ![Maven command to update the version](assets/images/next-steps/maven-update-pom.png)
 
-## Notices (optional)
+9. Right click on `com.demo.abap_assistant_plugin.releng -> Run As -> Maven Build`. In the **Goals** enter `clean install` and  choose **Run**.
 
-Include a legal disclaimer
+    ![Maven clean install command](assets/images/next-steps/maven-clean-install.png)
 
-**Example:**
+    You should see a log resembling the below screenshot in the console 
+
+    ![Maven Build log](assets/images/next-steps/maven-log.png)
+
+10. The plugin will be generated in `com.demo.abap_assistant_p2 -> target -> repository` folder.
+
+    ![repository folder where plugin will be generated](assets/images/next-steps/plugin-folder.png)
+
+## Cleanup
+
+### Uninstall SAP ABAP Assistant Plugin
+If you want to unisntall the ABAP Assitant from Eclipse, proceed with the below steps:
+
+1. In Eclipse IDE, navigate to **Help -> About Eclipse IDE** and then choose **Installation Details** to list the installed softwares.
+
+    ![About Eclipse option in Eclipse IDE](assets/images/cleanup/about-eclipse.png)
+
+2. Select **ABAP Assistant** from the list, and then choose **Uninstall**
+
+    ![ABAP Assistant Uninstall option](assets/images/cleanup/uninstall-abap-assistant.png)
+
+3. In the subsequent screen, choose **Finish** to unisntall the ABAP Asssistant Plugin. You will then see a dialog box asking you to restart Eclipse. Choose **Restart Now**. 
+    ![Uninstalling ABAP Assistant plugin](assets/images/cleanup/unisntall-confirmation.png)
+
+### AWS resources
+1. Remove the permission set `ABAPAssistantAccess` from all AWS accounts that use the permission set. Refer this [link](https://docs.aws.amazon.com/singlesignon/latest/userguide/howtoremovepermissionset.html) for the steps to be followed.
+
+2.  You can delete the permission set manually or by deleting the entire AWS CloudFormation stack.
+
+ - If you want to delete the entire stack using the CloudFormation console:
+    - Sign in to the AWS CloudFormation console
+    - Select the Stack `sap-abap-assistant` and click on **delete**.
+
+
+## Notices
+
 *Customers are responsible for making their own independent assessment of the information in this Guidance. This Guidance: (a) is for informational purposes only, (b) represents AWS current product offerings and practices, which are subject to change without notice, and (c) does not create any commitments or assurances from AWS and its affiliates, suppliers or licensors. AWS products or services are provided “as is” without warranties, representations, or conditions of any kind, whether express or implied. AWS responsibilities and liabilities to its customers are controlled by AWS agreements, and this Guidance is not part of, nor does it modify, any agreement between AWS and its customers.*
 
+## Authors
 
-## Authors (optional)
-
-Name of code contributors
+Adren D Souza

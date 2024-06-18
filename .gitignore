@@ -25,3 +25,17 @@ cdk.out
 **/data/**.csv
 
 .env
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# Mac
+.DS_Store
+
+# Maven
+target/
+
+**/dependency-reduced-pom.xml

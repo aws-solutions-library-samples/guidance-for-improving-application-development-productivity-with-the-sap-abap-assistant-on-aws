@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="com.demo.abap_assistant.plugin.commands.category"
+            name="ABAP Assistant Category">
+      </category>
+      <command
+            categoryId="com.demo.abap_assistant.plugin.commands.category"
+            name="ABAP Code Assistant"
+            id="com.demo.abap_assistant.plugin.commands.abapCodeCommand">
+      </command>
+      <command
+            categoryId="com.demo.abap_assistant.plugin.commands.category"
+            id="com.demo.abap_assistant.plugin.commands.abapDocCommand"
+            name="ABAP Documentation Assistant">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="com.demo.abap_assistant_plugin.handlers.ABAPCodeHandler"
+            commandId="com.demo.abap_assistant.plugin.commands.abapCodeCommand">
+      </handler>
+      <handler
+            class="com.demo.abap_assistant_plugin.handlers.ABAPDocumentationHandler"
+            commandId="com.demo.abap_assistant.plugin.commands.abapDocCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="com.demo.abap_assistant.plugin.commands.abapCodeCommand"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="M1+M2+7">
+      </key>
+      <key
+            commandId="com.demo.abap_assistant.plugin.commands.abapDocCommand"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+8">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               id="com.demo.abap_assistant.plugin.menus.sampleMenu"
+               label="Ask Bedrock"
+               mnemonic="M">
+            <command
+                  commandId="com.demo.abap_assistant.plugin.commands.abapCodeCommand"
+                  id="com.demo.abap_assistant.plugin.menus.abapCodeCommand"
+                  mnemonic="S">
+            </command>
+            <command
+                  commandId="com.demo.abap_assistant.plugin.commands.abapDocCommand"
+                  id="com.demo.abap_assistant.plugin.menus.abapDocCommand"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:com.demo.abap_assistant.plugin.commands.abapCodeCommand">
+         <command
+               commandId="com.demo.abap_assistant.plugin.commands.abapCodeCommand"
+               style="push">
+         </command>
+         <command
+               commandId="com.demo.abap_assistant.plugin.commands.abapDocCommand"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="com.demo.abap_assistant_plugin.preferences.ABAPAssistantPreferences"
+            id="com.demo.abap_assistant.plugin.page"
+            name="SAP ABAP Assistant">
+      </page>
+   </extension>
+
+</plugin>

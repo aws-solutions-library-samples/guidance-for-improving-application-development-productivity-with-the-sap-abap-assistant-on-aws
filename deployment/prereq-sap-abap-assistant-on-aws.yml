@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: CloudFormation template that deploys a permission set with inline policy in the IAM Identity Center Instance required for SAP ABAP Assistant to run.
+Parameters:
+  InstanceArn:
+    Type: String
+    Description: The ARN of the IAM Identity Center instance where the permission set should be created. Pattern - arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}
+    MinLength: 10
+    MaxLength: 1224
+    ConstraintDescription: The IAM Identity Center Instance ARN must be provided.
+  PermissionSetName:
+    Type: String
+    Default: ABAPAssistantAccess
+    Description: The name of the permission set to be created.
+    MinLength: 1
+    MaxLength: 32
+    ConstraintDescription: The Permission Set name must be provided.
+  SessionDuration:
+    Type: String
+    Default: PT8H
+    Description: The length of time that the application user sessions are valid for in the ISO-8601 standard.
+    MinLength: 1
+    MaxLength: 100
+    ConstraintDescription: The Session Duration must be provided.
+Resources:
+  PermissionSet:
+    Type: AWS::SSO::PermissionSet
+    Properties:
+      InstanceArn: !Ref InstanceArn
+      Name: !Ref PermissionSetName
+      Description: Permission set for SAP ABAP Assistant
+      SessionDuration: !Ref SessionDuration
+      InlinePolicy:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowInvokeModel
+            Effect: Allow
+            Action: bedrock:InvokeModel
+            Resource:
+              - arn:aws:bedrock:*::foundation-model/anthropic.claude-v2
+              - arn:aws:bedrock:*::foundation-model/anthropic.claude-v2:1
+              - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0
+              - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-haiku-20240307-v1:0
+              - arn:aws:bedrock:*::foundation-model/ai21.j2-mid-v1
+              - arn:aws:bedrock:*::foundation-model/ai21.j2-ultra-v1
+      Tags:
+        - Key: ApplicationName
+          Value: SAP ABAP Assistant
+Outputs:
+  PermissionSetArn:
+    Description: The ARN of the created permission set
+    Value: !Ref PermissionSet
