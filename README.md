@@ -23,7 +23,9 @@
 
 SAP customers are embarking on digital transformation projects, including RISE with SAP. To accelerate and de-risk transformation projects, customers want to understand ABAP programs in their SAP systems to assess the impact on business processes. Understanding existing custom code can be challenging for several reasons: 1/ lack of quality documentation for ABAP programs, 2/ unavailability of resources that built the custom code, and 3/ lack of resources needed to review and understand the legacy custom code. Also, ABAP developers spend significant time searching the existing codebase and forums for code snippets to incorporate into the ABAP programs. These challenges reduce  productivity and impact project deadlines.
 
-With the SAP ABAP Assistant using Amazon Bedrock, SAP customers can accelerate delivery of new ABAP code by generating code snippets with natural language prompts, and generate documentation for custom and standard ABAP programs, improving productivity and accelerating transformation
+With the SAP ABAP Assistant using Amazon Bedrock, SAP customers can accelerate delivery of new ABAP code by generating code snippets with natural language prompts, and generate documentation for custom and standard ABAP programs, improving productivity and accelerating transformation.
+
+This sample code consists of the SAP ABAP Assistant Eclipse plugin release and its source code.
 
 ### Architecture
 
@@ -70,7 +72,7 @@ You can use SAP ABAP Assistant plugin in **Eclipse IDE** on **MacOS** or **Windo
 
 For this guidance , we will be using the `us-east-1` region.
 
-1. Enable [AWS IAM Identity Center](https://docs.aws.amazon.com/singlesignon/latest/userguide/get-set-up-for-idc.html). Make a note of the **Instance ARN** and **AWS Access portal URL**
+1. Enable [AWS IAM Identity Center](https://docs.aws.amazon.com/singlesignon/latest/userguide/get-set-up-for-idc.html) with AWS Organizations. Make a note of the **Instance ARN** and **AWS Access portal URL** from the **Settings** page of IAM Identity Center.
 
 ![Settings page of IAM Identity Center](/assets/images/prerequisites/IAM_Identity_Center_Settings.png)
 
@@ -115,7 +117,8 @@ This guidance utilizes the `AdministratorAccess` role for deployment. For use in
     ```
 
 ## Setup
-1. [Assign permission set](https://docs.aws.amazon.com/singlesignon/latest/userguide/set-up-single-sign-on-access-to-accounts.html) created above to the user or group in IAM Identity Center.
+
+1. As per the [identity source](https://docs.aws.amazon.com/singlesignon/latest/userguide/manage-your-identity-source.html) configured in your IAM Identitiy Cetner, [assign permission set](https://docs.aws.amazon.com/singlesignon/latest/userguide/set-up-single-sign-on-access-to-accounts.html) created above to the user or group in IAM Identity Center.
 
 ### Authentication
 1. Open your preferred terminal in MacOS or Windows Operating System to run the AWS CLI commands
@@ -251,13 +254,13 @@ git clone https://github.com/aws-solutions-library-samples/guidance-for-improvin
 cd ./guidance-for-improving-application-development-productivity-with-the-sap-abap-assistant-on-aws
 ```
 
-2. Download and install **Eclipse IDE for Eclipse Committers** from this link with version 2023-09 and above.
+2. Download and install **[Eclipse IDE for Eclipse Committers](https://www.eclipse.org/downloads/packages/)** with version 2023-09 and above.
 
 3. Import the source code in Eclipse IDE for Eclipse Committers. Choose `File -> Import -> Maven -> Existing Maven projects. 
 
     ![Import wizard in Eclipse IDE for Eclipse Committers](assets/images/next-steps/import-wizard.png)
 
-4. Browser to the folder which has the downloaded source code projects. Choose **Finish**. 
+4. Browser to the `source` folder which has the downloaded source code. Choose **Finish**. 
 
     ![Import soure code in Eclipse IDE for Eclipse Committers](assets/images/next-steps/source-code-import.png)
 
@@ -288,6 +291,10 @@ cd ./guidance-for-improving-application-development-productivity-with-the-sap-ab
 10. The plugin will be generated in `com.demo.abap_assistant_p2 -> target -> repository` folder.
 
     ![repository folder where plugin will be generated](assets/images/next-steps/plugin-folder.png)
+
+11. You can install or update to the new version of the plugin in by selecting **Help -> Install New Software** in Eclipse and pointing to the `repository` folder. Alternatively, you can zip the contents under `repository` folder and point to the zip file.
+
+    ![Installing new version of SAP ABAP Assistant plugin](assets/images/next-steps/install-new-plugin-version.png)
 
 ## Cleanup
 
