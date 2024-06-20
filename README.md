@@ -134,20 +134,20 @@ This guidance utilizes the `AdministratorAccess` role for deployment. For use in
     ```
 3. The AWS CLI attempts to open your default browser and begin the login process for your IAM Identity Center account.
 
-4. The AWS CLI displays the AWS accounts available for you to use. If you are authorized to use only one account, the AWS CLI selects that account for you automatically and skips the prompt
+4. The AWS CLI displays the AWS accounts available for you to use. Use the arrow keys to select the account you want to use. If you are authorized to use only one account, the AWS CLI selects that account for you automatically and skips the prompt.
     ```
     There are 2 AWS accounts available to you.
     > DeveloperAccount, developer-account-admin@example.com (123456789011) 
     ProductionAccount, production-account-admin@example.com (123456789022)
     ```
-5. The AWS CLI confirms your account choice, and displays the IAM roles that are available to you in the selected account. Use the arrow keys to select the IAM role `ABAPAssistantAccess` and press <ENTER>. If the selected account lists only one role, the AWS CLI selects that role for you automatically and skips the prompt.
+5. The AWS CLI confirms your account choice, and displays the IAM roles that are available to you in the selected account. Use the arrow keys to select the IAM role `ABAPAssistantAccess` and press \<ENTER\>. If the selected account lists only one role, the AWS CLI selects that role for you automatically and skips the prompt.
     ```
     Using the account ID 123456789011
     There are 2 roles available to you.
     > ReadOnly
     ABAPAssistantAccess
     ```
-6. Specify the default output format, the default AWS Region to send commands to, and providing a name for the profile so you can reference this profile from among all those defined on the local computer
+6. Specify the default output format, the default AWS Region to send commands to, and provide a name as `abap-assistant` for the profile so you can reference this profile from Eclipse plugin.
 
     ```
     CLI default client Region [None]: us-east-1
@@ -256,7 +256,7 @@ cd ./guidance-for-improving-application-development-productivity-with-the-sap-ab
 
 2. Download and install **[Eclipse IDE for Eclipse Committers](https://www.eclipse.org/downloads/packages/)** with version 2023-09 and above.
 
-3. Import the source code in Eclipse IDE for Eclipse Committers. Choose `File -> Import -> Maven -> Existing Maven projects. 
+3. Import the source code in Eclipse IDE for Eclipse Committers. Choose `File -> Import -> Maven -> Existing Maven projects`. 
 
     ![Import wizard in Eclipse IDE for Eclipse Committers](assets/images/next-steps/import-wizard.png)
 
