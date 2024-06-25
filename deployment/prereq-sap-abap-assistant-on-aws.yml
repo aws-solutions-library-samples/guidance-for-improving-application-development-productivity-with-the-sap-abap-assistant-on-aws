@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: CloudFormation template that deploys a permission set with inline policy in the IAM Identity Center Instance required for SAP ABAP Assistant to run.
+Description: CloudFormation template (SO9486) that deploys a permission set with inline policy in the IAM Identity Center Instance required for SAP ABAP Assistant to run.
 Parameters:
   InstanceArn:
     Type: String
