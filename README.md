@@ -53,7 +53,7 @@ _We recommend creating a [Budget](https://docs.aws.amazon.com/cost-management/l
 The following table provides a sample cost breakdown for deploying this Guidance with the default parameters in the US East (N. Virginia) Region
 
 
-| AWS service  | Price per 1000 input tokens [USD] | Price per 1000 input tokens [USD] |
+| AWS service  | Price per 1,000 input tokens [USD] | Price per 1,000 output tokens [USD] |
 | ------------ | ----------------------------------| --------------------------------- |
 | Amazon Bedrock - Claude 3 Sonnet | $ 0.003 | $ 0.015 |
 
