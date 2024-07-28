@@ -48,7 +48,7 @@ public class ABAPAssistantHelper {
 		ISecurePreferences prefs = SecurePreferencesFactory.getDefault();
 		String prefvalue = "";
 		prefvalue = prefs.get(prefName, "").trim();
-		System.out.println(prefName+" = "+prefvalue);
+		//System.out.println(prefName+" = "+prefvalue);
 		return prefvalue;	
 	}
 	
@@ -90,7 +90,9 @@ public class ABAPAssistantHelper {
 	public static boolean checkPreferences() throws StorageException {
 		if(getPreferences(ABAPAssistantConstants.PREFERENCES_AWS_PROFILE).equals("")
 		   || getPreferences(ABAPAssistantConstants.PREFERENCES_AWS_REGION).equals("")
-		   || getPreferences(ABAPAssistantConstants.PREFERENCES_MODEL_ID).equals("")) {
+		   || getPreferences(ABAPAssistantConstants.PREFERENCES_MODEL_ID).equals("")
+		   || getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_CODE).equals("")
+		   || getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_DOC).equals("")){
 			return false;
 		}
 		return true;

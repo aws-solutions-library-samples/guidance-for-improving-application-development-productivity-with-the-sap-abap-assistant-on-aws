@@ -13,6 +13,7 @@
 5. [Setup](#setup)
     - [Authentication](#authentication)
     - [Plugin Installation](#plugin-installation)
+    - [Plugin Configuration](#plugin-configuration)
 6. [Running the Guidance](#running-the-guidance)
 7. [Next Steps](#next-steps)
 8. [Cleanup](#cleanup)
@@ -184,7 +185,7 @@ This guidance utilizes the `AdministratorAccess` role for deployment. For use in
     ```
 
 ### Plugin Installation
-1. From the main page of the GitHub repository, click **[Releases](https://github.com/aws-solutions-library-samples/guidance-for-improving-application-development-productivity-with-the-sap-abap-assistant-on-aws/releases)** . From the latest listed releae, download the SAP ABAP Assistant plugin zip file (for e.g. sap-abap-assistant-V1_0_17.zip) from the **Assets** section. Save the plugin zip file in your local file system.
+1. From the main page of the GitHub repository, click **[Releases](https://github.com/aws-solutions-library-samples/guidance-for-improving-application-development-productivity-with-the-sap-abap-assistant-on-aws/releases)** . From the latest listed releae, download the SAP ABAP Assistant plugin zip file (for e.g. sap-abap-assistant-V1_0_18.zip) from the **Assets** section. Save the plugin zip file in your local file system.
 
 2. Open Eclipse IDE and choose **Help -> Install New Software**. Choose the **Add…** button. In the next dialog window, choose **Archive…** and select the zip file that you downloaded. Choose **Add**.
 
@@ -211,6 +212,10 @@ Before using ABAP Assistant plugin , you need to set up the plugin preferences i
 * **Model ID** – Enter `anthropic.claude-3-sonnet-20240229-v1:0`. The plugin currently supports Anthropic Claude (v2, v2.1, Claude 3 Sonnet and Claude 3 Haiku) and Jurassic-2 (mid and ultra) models . Refer [this documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html) for list of Amazon bedrock Model IDs. 
 
 * **AWS Profile** – Enter the name of the AWS profile `abap-assistant` that you created
+
+* **Prompt for ABAP Code** – The prompt for generating ABAP code is prepopulated. If required, you can change the prompt as per your requirements.
+
+* **Prompt for Docmentation** – The prompt for generating ABAP documentation is prepopulated. If required, you can change the prompt as per your requirements.
 
 The following screenshot shows the SAP ABAP Assistant plugin preferences page.
 
@@ -301,7 +306,7 @@ cd ./guidance-for-improving-application-development-productivity-with-the-sap-ab
 ### Uninstall SAP ABAP Assistant Plugin
 If you want to unisntall the ABAP Assitant from Eclipse, proceed with the below steps:
 
-1. In Eclipse IDE, navigate to **Help -> About Eclipse IDE** and then choose **Installation Details** to list the installed softwares.
+1. In Eclipse IDE, choose **Help -> About Eclipse IDE** (on Windows), or **Eclipse -> About Eclipse** (on MacOS) and then choose **Installation Details** to list the installed softwares.
 
     ![About Eclipse option in Eclipse IDE](assets/images/cleanup/about-eclipse.png)
 

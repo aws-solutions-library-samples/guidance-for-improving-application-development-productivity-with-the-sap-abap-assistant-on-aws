@@ -33,6 +33,8 @@ public class ABAPAssistantConstants {
 	public static final String PREFERENCES_AWS_REGION = "AWS-REGION";
 	public static final String PREFERENCES_MODEL_ID = "MODEL-ID";
 	public static final String PREFERENCES_AWS_PROFILE = "AWS-PROFILE";	
+	public static final String PREFERENCES_PROMPT_CODE = "PROMPT-CODE";	
+	public static final String PREFERENCES_PROMPT_DOC = "PROMPT-DOC";	
 
 	// Eclipse preferences Default constants
 	public static final String PREFERENCES_AWS_REGION_DEFAULT = "us-east-1";

@@ -79,12 +79,11 @@ public class ABAPCodeHandler extends AbstractHandler {
 							if (selectionProvider != null) {
 								ISelection selection = selectionProvider.getSelection();
 								ITextSelection textSelection = (ITextSelection) selection;
-								System.out.println("Selected text = " + textSelection.getText());
 
 								try {
 
 									String selectedText = textSelection.getText().replaceAll("\\*", "").trim();
-									System.out.println("promptText = " + selectedText);
+									//System.out.println("promptText = " + selectedText);
 									
 									if (!selectedText.equalsIgnoreCase("")) {
 
@@ -95,9 +94,8 @@ public class ABAPCodeHandler extends AbstractHandler {
 										// Anthropic Claude 2 Models
 										if (modelID.equalsIgnoreCase(ABAPAssistantConstants.CLAUDE_MODEL_ID_V2)
 												|| modelID.equalsIgnoreCase(ABAPAssistantConstants.CLAUDE_MODEL_ID_V2_1)) {
-											String prompt = "\n\nHuman: " + ABAPAssistantConstants.PROMPT_ABAP_CODE
+											String prompt = "\n\nHuman: " + ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_CODE)
 													+ selectedText + "\nAssistant:";
-											System.out.println("Prompt is as follows \n" + prompt);
 											result = ABAPAssistantModelHelper.invokeClaude2Models(prompt, modelID);
 											doc.replace(doc.getLength(), 0, "\n" + result + "\n");
 										}
@@ -105,16 +103,14 @@ public class ABAPCodeHandler extends AbstractHandler {
 										else if (modelID
 												.equalsIgnoreCase(ABAPAssistantConstants.CLAUDE3_MODEL_ID_SONNET)
 												|| modelID.equalsIgnoreCase(ABAPAssistantConstants.CLAUDE3_MODEL_ID_HAIKU)) {
-											String prompt = ABAPAssistantConstants.PROMPT_ABAP_CODE + selectedText;
-											System.out.println("Prompt is as follows \n" + prompt);
+											String prompt = ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_CODE) + selectedText;
 											result = ABAPAssistantModelHelper.invokeClaude3Models(prompt, modelID);
 											doc.replace(doc.getLength(), 0, "\n" + result + "\n");
 										}
 										// AI21 Jurassic Model
 										else if (modelID.equalsIgnoreCase(ABAPAssistantConstants.JURASSIC_MODEL_ID_MID)
 												|| modelID.equalsIgnoreCase(ABAPAssistantConstants.JURASSIC_MODEL_ID_ULTRA)) {
-											String prompt = ABAPAssistantConstants.PROMPT_ABAP_CODE + selectedText;
-											System.out.println("Prompt is as follows \n" + prompt);
+											String prompt = ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_CODE) + selectedText;
 											result = ABAPAssistantModelHelper.invokeJurassicModels(prompt, modelID);
 											doc.replace(doc.getLength(), 0, "\n" + result + "\n");
 										}

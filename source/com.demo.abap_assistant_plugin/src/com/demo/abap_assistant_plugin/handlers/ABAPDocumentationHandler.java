@@ -77,11 +77,10 @@ public class ABAPDocumentationHandler extends AbstractHandler {
 							if (selectionProvider != null) {
 								ISelection selection = selectionProvider.getSelection();
 								ITextSelection textSelection = (ITextSelection) selection;
-								System.out.println("Selected text = " + textSelection.getText());
 
 								try {
 									String selectedText = textSelection.getText().trim();;
-									System.out.println("promptText = " + selectedText);
+									//System.out.println("promptText = " + selectedText);
 									
 									if (!selectedText.equalsIgnoreCase("")) {
 	
@@ -92,21 +91,21 @@ public class ABAPDocumentationHandler extends AbstractHandler {
 										//Anthropic Claude 2 Models
 										if (modelID.equalsIgnoreCase(ABAPAssistantConstants.CLAUDE_MODEL_ID_V2) || 
 											modelID.equalsIgnoreCase(ABAPAssistantConstants.CLAUDE_MODEL_ID_V2_1)) {
-											String prompt = "\n\nHuman: " + ABAPAssistantConstants.PROMPT_ABAP_DOC + selectedText + "\nAssistant:";
+											String prompt = "\n\nHuman: " + ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_DOC) + selectedText + "\nAssistant:";
 											result = ABAPAssistantModelHelper.invokeClaude2Models(prompt, modelID);
 											ABAPAssistantHelper.writeToConsole(result, activePage);
 										}
 										//Anthropic Claude 3 Models
 										else if (modelID.equalsIgnoreCase(ABAPAssistantConstants.CLAUDE3_MODEL_ID_SONNET) ||
 											modelID.equalsIgnoreCase(ABAPAssistantConstants.CLAUDE3_MODEL_ID_HAIKU)) {
-											String prompt = ABAPAssistantConstants.PROMPT_ABAP_DOC + selectedText;
+											String prompt = ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_DOC) + selectedText;
 											result = ABAPAssistantModelHelper.invokeClaude3Models(prompt, modelID);
 											ABAPAssistantHelper.writeToConsole(result, activePage);
 										}
 										//AI21 Jurassic Model
 										else if (modelID.equalsIgnoreCase(ABAPAssistantConstants.JURASSIC_MODEL_ID_MID)|| 
 												 modelID.equalsIgnoreCase(ABAPAssistantConstants.JURASSIC_MODEL_ID_ULTRA)) {
-											String prompt = ABAPAssistantConstants.PROMPT_ABAP_DOC + selectedText;
+											String prompt = ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_DOC) + selectedText;
 											result = ABAPAssistantModelHelper.invokeJurassicModels(prompt, modelID);
 											ABAPAssistantHelper.writeToConsole(result, activePage);
 										}

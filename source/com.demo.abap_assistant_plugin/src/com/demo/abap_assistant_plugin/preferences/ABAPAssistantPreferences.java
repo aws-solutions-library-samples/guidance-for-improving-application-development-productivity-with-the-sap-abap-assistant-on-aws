@@ -36,7 +36,7 @@ import com.demo.abap_assistant_plugin.helpers.ABAPAssistantConstants;
 public class ABAPAssistantPreferences extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
 	
-	StringFieldEditor awsRegion, modelId, awsProfile = null;
+	StringFieldEditor awsRegion, modelId, awsProfile, promptCode, promptDoc = null;
 	
 	
 	public ABAPAssistantPreferences() {
@@ -51,12 +51,17 @@ public class ABAPAssistantPreferences extends FieldEditorPreferencePage implemen
 
 	@Override
 	protected void createFieldEditors() {	
-		awsRegion = new StringFieldEditor(ABAPAssistantConstants.PREFERENCES_AWS_REGION, "AWS Region", 25, getFieldEditorParent());
+		awsRegion = new StringFieldEditor(ABAPAssistantConstants.PREFERENCES_AWS_REGION, "AWS Region", 35, getFieldEditorParent());
 		addField((FieldEditor)awsRegion);
-		modelId = new StringFieldEditor(ABAPAssistantConstants.PREFERENCES_MODEL_ID, "Model ID", 25, getFieldEditorParent());
+		modelId = new StringFieldEditor(ABAPAssistantConstants.PREFERENCES_MODEL_ID, "Model ID", 35, getFieldEditorParent());
 		addField((FieldEditor)modelId);
-		awsProfile = new StringFieldEditor(ABAPAssistantConstants.PREFERENCES_AWS_PROFILE, "AWS Profile", 25, getFieldEditorParent());
+		awsProfile = new StringFieldEditor(ABAPAssistantConstants.PREFERENCES_AWS_PROFILE, "AWS Profile", 35, getFieldEditorParent());
 		addField((FieldEditor)awsProfile);
+		promptCode = new StringFieldEditor(ABAPAssistantConstants.PREFERENCES_PROMPT_CODE, "Prompt for ABAP Code", 55, getFieldEditorParent());
+		addField((FieldEditor)promptCode);
+		promptDoc = new StringFieldEditor(ABAPAssistantConstants.PREFERENCES_PROMPT_DOC, "Prompt for Documentation", 55, getFieldEditorParent());
+		addField((FieldEditor)promptDoc);
+		
 	}
 	
 	@Override
@@ -66,6 +71,8 @@ public class ABAPAssistantPreferences extends FieldEditorPreferencePage implemen
 			pref.put(ABAPAssistantConstants.PREFERENCES_AWS_REGION, awsRegion.getStringValue(), true);
 			pref.put(ABAPAssistantConstants.PREFERENCES_MODEL_ID, modelId.getStringValue(), true);
 			pref.put(ABAPAssistantConstants.PREFERENCES_AWS_PROFILE, awsProfile.getStringValue(), true);
+			pref.put(ABAPAssistantConstants.PREFERENCES_PROMPT_CODE, promptCode.getStringValue(), true);
+			pref.put(ABAPAssistantConstants.PREFERENCES_PROMPT_DOC, promptDoc.getStringValue(), true);
 			pref.flush();
 		} catch (StorageException e) {
 			e.printStackTrace();
@@ -83,6 +90,8 @@ public class ABAPAssistantPreferences extends FieldEditorPreferencePage implemen
 			awsRegion.setStringValue(prefs.get(ABAPAssistantConstants.PREFERENCES_AWS_REGION, ""));
 			modelId.setStringValue(prefs.get(ABAPAssistantConstants.PREFERENCES_MODEL_ID, ""));
 			awsProfile.setStringValue(prefs.get(ABAPAssistantConstants.PREFERENCES_AWS_PROFILE, ""));
+			promptCode.setStringValue(prefs.get(ABAPAssistantConstants.PREFERENCES_PROMPT_CODE, ABAPAssistantConstants.PROMPT_ABAP_CODE));
+			promptDoc.setStringValue(prefs.get(ABAPAssistantConstants.PREFERENCES_PROMPT_DOC, ABAPAssistantConstants.PROMPT_ABAP_DOC));
 		} catch (StorageException e) {
 			e.printStackTrace();
 		}
@@ -95,6 +104,8 @@ public class ABAPAssistantPreferences extends FieldEditorPreferencePage implemen
 	    awsRegion.setStringValue(ABAPAssistantConstants.PREFERENCES_AWS_REGION_DEFAULT);
 	    modelId.setStringValue(ABAPAssistantConstants.PREFERENCES_MODEL_ID_DEFAULT);
 	    awsProfile.setStringValue(ABAPAssistantConstants.PREFERENCES_AWS_PROFILE_DEFAULT);
+	    promptCode.setStringValue(ABAPAssistantConstants.PROMPT_ABAP_CODE);
+	    promptDoc.setStringValue(ABAPAssistantConstants.PROMPT_ABAP_DOC);
 	}
 	
 

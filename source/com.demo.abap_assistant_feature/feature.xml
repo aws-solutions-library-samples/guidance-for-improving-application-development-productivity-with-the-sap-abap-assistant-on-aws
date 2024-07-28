@@ -2,7 +2,7 @@
 <feature
       id="com.demo.abap_assistant_feature"
       label="ABAP Assistant"
-      version="1.0.17.qualifier"
+      version="1.0.18.qualifier"
       provider-name="DEMO">
 
    <description>
