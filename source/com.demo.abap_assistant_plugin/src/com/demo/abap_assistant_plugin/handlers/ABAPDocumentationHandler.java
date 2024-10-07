@@ -87,29 +87,22 @@ public class ABAPDocumentationHandler extends AbstractHandler {
 										String result = "";
 										String modelID = ABAPAssistantHelper
 												.getPreferences(ABAPAssistantConstants.PREFERENCES_MODEL_ID);
-	
-										//Anthropic Claude 2 Models
-										if (modelID.equalsIgnoreCase(ABAPAssistantConstants.CLAUDE_MODEL_ID_V2) || 
-											modelID.equalsIgnoreCase(ABAPAssistantConstants.CLAUDE_MODEL_ID_V2_1)) {
-											String prompt = "\n\nHuman: " + ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_DOC) + selectedText + "\nAssistant:";
-											result = ABAPAssistantModelHelper.invokeClaude2Models(prompt, modelID);
-											ABAPAssistantHelper.writeToConsole(result, activePage);
-										}
-										//Anthropic Claude 3 Models
-										else if (modelID.equalsIgnoreCase(ABAPAssistantConstants.CLAUDE3_MODEL_ID_SONNET) ||
-											modelID.equalsIgnoreCase(ABAPAssistantConstants.CLAUDE3_MODEL_ID_HAIKU)) {
+
+										// Anthropic Claude and Meta Foundation Models
+										if (ABAPAssistantHelper.isModelSupported(modelID)) {
 											String prompt = ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_DOC) + selectedText;
-											result = ABAPAssistantModelHelper.invokeClaude3Models(prompt, modelID);
+											result = ABAPAssistantModelHelper.invokeBedrockModels(prompt, modelID);
 											ABAPAssistantHelper.writeToConsole(result, activePage);
 										}
 										//AI21 Jurassic Model
-										else if (modelID.equalsIgnoreCase(ABAPAssistantConstants.JURASSIC_MODEL_ID_MID)|| 
-												 modelID.equalsIgnoreCase(ABAPAssistantConstants.JURASSIC_MODEL_ID_ULTRA)) {
+										else if (modelID.equalsIgnoreCase(ABAPAssistantConstants.JURASSIC_MODEL_ID_MID) 
+												|| modelID.equalsIgnoreCase(ABAPAssistantConstants.JURASSIC_MODEL_ID_ULTRA)) {
 											String prompt = ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_DOC) + selectedText;
 											result = ABAPAssistantModelHelper.invokeJurassicModels(prompt, modelID);
 											ABAPAssistantHelper.writeToConsole(result, activePage);
 										}
-										// Custom logic - Additional foundation model implementations go here within else if
+										
+										// Custom logic - Additional foundation model implementations if required go here within else if
 										
 										else {
 											MessageDialog.openError(window.getShell(),

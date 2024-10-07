@@ -185,7 +185,7 @@ This guidance utilizes the `AdministratorAccess` role for deployment. For use in
     ```
 
 ### Plugin Installation
-1. From the main page of the GitHub repository, click **[Releases](https://github.com/aws-solutions-library-samples/guidance-for-improving-application-development-productivity-with-the-sap-abap-assistant-on-aws/releases)** . From the latest listed releae, download the SAP ABAP Assistant plugin zip file (for e.g. sap-abap-assistant-V1_0_18.zip) from the **Assets** section. Save the plugin zip file in your local file system.
+1. From the main page of the GitHub repository, click **[Releases](https://github.com/aws-solutions-library-samples/guidance-for-improving-application-development-productivity-with-the-sap-abap-assistant-on-aws/releases)** . From the latest listed releae, download the SAP ABAP Assistant plugin zip file (for e.g. sap-abap-assistant-V1_0_19.zip) from the **Assets** section. Save the plugin zip file in your local file system.
 
 2. Open Eclipse IDE and choose **Help -> Install New Software**. Choose the **Add…** button. In the next dialog window, choose **Archive…** and select the zip file that you downloaded. Choose **Add**.
 
@@ -209,7 +209,7 @@ Before using ABAP Assistant plugin , you need to set up the plugin preferences i
 
 * **AWS Region** – Enter `us-east-1`. Refer this [documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions) for list of AWS region codes. 
 
-* **Model ID** – Enter `anthropic.claude-3-sonnet-20240229-v1:0`. The plugin currently supports Anthropic Claude (v2, v2.1, Claude 3 Sonnet and Claude 3 Haiku) and Jurassic-2 (mid and ultra) models . Refer [this documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html) for list of Amazon bedrock Model IDs. 
+* **Model ID** – Enter `anthropic.claude-3-sonnet-20240229-v1:0`. The plugin currently supports Anthropic Claude (v2, v2.1, Claude 3 Sonnet, Claude 3.5 Sonnet and Claude 3 Haiku), Meta Llama 3.1 405B and Jurassic-2 (mid and ultra) models . Refer [this documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html) for list of Amazon bedrock Model IDs. 
 
 * **AWS Profile** – Enter the name of the AWS profile `abap-assistant` that you created
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.demo.abap_assistant_feature_1.0.18.qualifier.jar" id="com.demo.abap_assistant_feature" version="1.0.18.qualifier">
+   <feature url="features/com.demo.abap_assistant_feature_1.0.19.qualifier.jar" id="com.demo.abap_assistant_feature" version="1.0.19.qualifier">
       <category name="ABAP_Assistant_category"/>
    </feature>
    <category-def name="ABAP_Assistant_category" label="ABAP Assistant"/>

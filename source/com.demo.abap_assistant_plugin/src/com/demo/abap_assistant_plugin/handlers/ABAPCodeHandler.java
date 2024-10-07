@@ -79,42 +79,33 @@ public class ABAPCodeHandler extends AbstractHandler {
 							if (selectionProvider != null) {
 								ISelection selection = selectionProvider.getSelection();
 								ITextSelection textSelection = (ITextSelection) selection;
-
+			     
 								try {
 
 									String selectedText = textSelection.getText().replaceAll("\\*", "").trim();
 									//System.out.println("promptText = " + selectedText);
+									int offset = textSelection.getOffset() + textSelection.getLength();
 									
 									if (!selectedText.equalsIgnoreCase("")) {
 
 										String result = "";
-										String modelID = ABAPAssistantHelper
-												.getPreferences(ABAPAssistantConstants.PREFERENCES_MODEL_ID);
-
-										// Anthropic Claude 2 Models
-										if (modelID.equalsIgnoreCase(ABAPAssistantConstants.CLAUDE_MODEL_ID_V2)
-												|| modelID.equalsIgnoreCase(ABAPAssistantConstants.CLAUDE_MODEL_ID_V2_1)) {
-											String prompt = "\n\nHuman: " + ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_CODE)
-													+ selectedText + "\nAssistant:";
-											result = ABAPAssistantModelHelper.invokeClaude2Models(prompt, modelID);
-											doc.replace(doc.getLength(), 0, "\n" + result + "\n");
-										}
-										// Anthropic Claude 3 Models
-										else if (modelID
-												.equalsIgnoreCase(ABAPAssistantConstants.CLAUDE3_MODEL_ID_SONNET)
-												|| modelID.equalsIgnoreCase(ABAPAssistantConstants.CLAUDE3_MODEL_ID_HAIKU)) {
+										String modelID = ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_MODEL_ID);
+										
+										// Anthropic Claude, Meta and Mistral Foundation Models
+										if (ABAPAssistantHelper.isModelSupported(modelID)) {
 											String prompt = ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_CODE) + selectedText;
-											result = ABAPAssistantModelHelper.invokeClaude3Models(prompt, modelID);
-											doc.replace(doc.getLength(), 0, "\n" + result + "\n");
-										}
+											result = ABAPAssistantModelHelper.invokeBedrockModels(prompt, modelID);
+											doc.replace(offset, 0, "\n" + result + "\n");
+										}										
 										// AI21 Jurassic Model
 										else if (modelID.equalsIgnoreCase(ABAPAssistantConstants.JURASSIC_MODEL_ID_MID)
 												|| modelID.equalsIgnoreCase(ABAPAssistantConstants.JURASSIC_MODEL_ID_ULTRA)) {
 											String prompt = ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_CODE) + selectedText;
 											result = ABAPAssistantModelHelper.invokeJurassicModels(prompt, modelID);
-											doc.replace(doc.getLength(), 0, "\n" + result + "\n");
+											doc.replace(offset, 0, "\n" + result + "\n");
 										}
-										// Custom logic - Additional foundation model implementations go here within else if
+										
+										// Custom logic - Additional foundation model implementations if required go here within else if
 
 										else {
 											MessageDialog.openError(window.getShell(),

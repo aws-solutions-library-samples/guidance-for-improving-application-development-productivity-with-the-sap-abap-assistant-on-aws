@@ -9,5 +9,5 @@
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../com.demo.abap_assistant_releng</relativePath>
 	</parent>
-<version>1.0.18-SNAPSHOT</version>
+<version>1.0.19-SNAPSHOT</version>
 </project>

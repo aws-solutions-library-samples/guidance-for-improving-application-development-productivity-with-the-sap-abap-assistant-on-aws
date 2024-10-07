@@ -18,79 +18,60 @@
 
 package com.demo.abap_assistant_plugin.helpers;
 
+import java.util.concurrent.ExecutionException;
+
 import org.eclipse.equinox.security.storage.StorageException;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import software.amazon.awssdk.core.SdkBytes;
+import software.amazon.awssdk.services.bedrockruntime.BedrockRuntimeAsyncClient;
 import software.amazon.awssdk.services.bedrockruntime.BedrockRuntimeClient;
+import software.amazon.awssdk.services.bedrockruntime.model.ContentBlock;
+import software.amazon.awssdk.services.bedrockruntime.model.ConversationRole;
+import software.amazon.awssdk.services.bedrockruntime.model.ConverseStreamResponseHandler;
 import software.amazon.awssdk.services.bedrockruntime.model.InvokeModelRequest;
 import software.amazon.awssdk.services.bedrockruntime.model.InvokeModelResponse;
+import software.amazon.awssdk.services.bedrockruntime.model.Message;
 
 public class ABAPAssistantModelHelper {
 	
-	// Invoke Anthropic Claude 2 Models
-	public static String invokeClaude2Models(String prompt, String modelID) throws JSONException, StorageException {
-        
-        BedrockRuntimeClient client =  ABAPAssistantHelper.getBedrockClient();
-        
-        String payload = new JSONObject().put("prompt", prompt)
-				.put("temperature", 0)
-				.put("top_k", 250)
-				.put("top_p", 0.2)
-				.put("max_tokens_to_sample", 4000).toString();
+	// Invoke Amazon Bedrock Foundation Models	
+	public static String invokeBedrockModels(String prompt, String modelID) throws StorageException, InterruptedException, ExecutionException {
+		
+		BedrockRuntimeAsyncClient client =  ABAPAssistantHelper.getBedrockAsyncClient();
+		
+		 Message message = Message.builder()
+	             .content(ContentBlock.fromText(prompt))
+	             .role(ConversationRole.USER)
+	             .build();
+	     
+	     // Prepare a buffer to accumulate the generated response text.
+	     StringBuilder completeResponseTextBuffer = new StringBuilder();
 
-        InvokeModelRequest request = InvokeModelRequest.builder()
-                .body(SdkBytes.fromUtf8String(payload))
-                .modelId(modelID)
-                .contentType("application/json")
-                .accept("application/json")
-                .build();
+	     // Handler to extract the response text
+	     ConverseStreamResponseHandler responseStreamHandler = ConverseStreamResponseHandler.builder()
+	             .subscriber(ConverseStreamResponseHandler.Visitor.builder()
+	                     .onContentBlockDelta(chunk -> {
+	                         String responseText = chunk.delta().text();
+	                         completeResponseTextBuffer.append(responseText);
+	                     }).build()
+	             ).build();
 
-        InvokeModelResponse response = client.invokeModel(request);
+         // Send the message with inference configuration and attach the handler.
+         client.converseStream(request -> request
+                 .modelId(modelID)
+                 .messages(message)
+                 .inferenceConfig(config -> config
+                         .maxTokens(4096)
+                         .temperature(0.2F)
+                         .topP(0.2F)
 
-        JSONObject responseBody = new JSONObject(response.body().asUtf8String());
-
-        String result = responseBody.getString("completion");
-        
-        return result;
-
-    }
-	
-	// Invoke Anthropic Claude 3 Models
-	public static String invokeClaude3Models(String prompt, String modelID) throws JSONException, StorageException {
-        
-        BedrockRuntimeClient client =  ABAPAssistantHelper.getBedrockClient();
-        
-        String payload = new JSONObject()
-                .put("anthropic_version", "bedrock-2023-05-31")
-                .put("max_tokens", 4000)
-				.put("temperature", 0.2)
-				.put("top_k", 250)
-				.put("top_p", 0.2)
-                .append("messages", new JSONObject()
-                        .put("role", "user")
-                        .append("content", new JSONObject()
-                                .put("type", "text")
-                                .put("text", prompt)
-                        )).toString();
-
-        InvokeModelRequest request = InvokeModelRequest.builder()
-                .body(SdkBytes.fromUtf8String(payload))
-                .modelId(modelID)
-                .contentType("application/json")
-                .accept("application/json")
-                .build();
-
-        InvokeModelResponse response = client.invokeModel(request);
-
-        JSONObject responseBody = new JSONObject(response.body().asUtf8String());
-        
-        String result = responseBody.getJSONArray("content").getJSONObject(0).getString("text");
-       
-        return result;
-
-    }
+                 ), responseStreamHandler).get();
+         
+         // Return the complete response text.
+         return completeResponseTextBuffer.toString();
+		
+	}
 	
 	// Invoke AI21 Jurassic Model
 	public static String invokeJurassicModels(String prompt, String modelID) throws JSONException, StorageException {
@@ -98,10 +79,11 @@ public class ABAPAssistantModelHelper {
         BedrockRuntimeClient client =  ABAPAssistantHelper.getBedrockClient();
 
         String payload = new JSONObject().put("prompt", prompt)
-				.put("temperature", 0)
+				.put("temperature", 0.2)
 				.put("topP", 0.2)
 				.put("maxTokens", 8191).toString();
 
+        // Encode and send the request to the Bedrock Runtime.
         InvokeModelRequest request = InvokeModelRequest.builder()
                 .body(SdkBytes.fromUtf8String(payload))
                 .modelId(modelID)
@@ -111,16 +93,16 @@ public class ABAPAssistantModelHelper {
 
         InvokeModelResponse response = client.invokeModel(request);
 
+        // Decode the response body.
         JSONObject responseBody = new JSONObject(response.body().asUtf8String());
         
+        // Retrieve the generated text from the model's response.
         String result =  responseBody.getJSONArray("completions").getJSONObject(0).getJSONObject("data").getString("text");
         
         return result;
 
     }
 	
-	// Custom logic - Functions for invoking other foundation models go here 
-	
-
+	// Custom logic - Functions for invoking other foundation models if required go here 
 	
 }
