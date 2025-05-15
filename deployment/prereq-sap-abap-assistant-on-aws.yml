@@ -1,29 +1,84 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: CloudFormation template (SO9486) that deploys a permission set with inline policy in the IAM Identity Center Instance required for SAP ABAP Assistant to run.
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "Authentication Configuration"
+        Parameters:
+          - ServiceType
+      - Label:
+          default: "IAM Identity Center Configuration"
+        Parameters:
+          - InstanceArn
+          - PermissionSetName
+          - SessionDuration
+      - Label:
+          default: "IAM Roles Anywhere Configuration"
+        Parameters:
+          - RoleName
+
 Parameters:
+  ServiceType:
+    Type: String
+    Description: Select the type of authentication and enter values in respective section
+    AllowedValues:
+      - IAM Identity Center
+      - IAM Roles Anywhere
+    Default: IAM Identity Center
+
   InstanceArn:
     Type: String
     Description: The ARN of the IAM Identity Center instance where the permission set should be created. Pattern - arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}
-    MinLength: 10
-    MaxLength: 1224
-    ConstraintDescription: The IAM Identity Center Instance ARN must be provided.
+    
   PermissionSetName:
     Type: String
-    Default: ABAPAssistantAccess
     Description: The name of the permission set to be created.
-    MinLength: 1
-    MaxLength: 32
-    ConstraintDescription: The Permission Set name must be provided.
+    Default: ABAPAssistantAccess
+    
   SessionDuration:
     Type: String
-    Default: PT8H
     Description: The length of time that the application user sessions are valid for in the ISO-8601 standard.
-    MinLength: 1
-    MaxLength: 100
-    ConstraintDescription: The Session Duration must be provided.
+    Default: PT8H
+
+  RoleName:
+    Type: String
+    Description: Name of the IAM Role for IAM Roles Anywhere
+
+Rules:
+  ValidateIAMIdentityCenterParameters:
+    RuleCondition: !Equals 
+      - !Ref ServiceType
+      - IAM Identity Center
+    Assertions:
+      - Assert: !Not [!Equals [!Ref InstanceArn, '']]
+        AssertDescription: "InstanceArn is required when authentication option is IAM Identity Center"
+      - Assert: !Not [!Equals [!Ref PermissionSetName, '']]
+        AssertDescription: "PermissionSetName is required when authentication option is IAM Identity Center"
+      - Assert: !Not [!Equals [!Ref SessionDuration, '']]
+        AssertDescription: "SessionDuration is required when authentication option is IAM Identity Center"
+
+  ValidateIAMRolesAnywhereParameters:
+    RuleCondition: !Equals 
+      - !Ref ServiceType
+      - IAM Roles Anywhere
+    Assertions:
+      - Assert: !Not [!Equals [!Ref RoleName, '']]
+        AssertDescription: "IAM RoleName is required when authentication option is IAM Roles Anywhere"
+
+Conditions:
+  IsIAMIdentityCenter: !Equals 
+    - !Ref ServiceType
+    - IAM Identity Center
+  
+  IsIAMRolesAnywhere: !Equals 
+    - !Ref ServiceType
+    - IAM Roles Anywhere
+
 Resources:
   PermissionSet:
     Type: AWS::SSO::PermissionSet
+    Condition: IsIAMIdentityCenter
     Properties:
       InstanceArn: !Ref InstanceArn
       Name: !Ref PermissionSetName
@@ -35,21 +90,72 @@ Resources:
           - Sid: AllowInvokeModel
             Effect: Allow
             Action: 
-              - bedrock:InvokeModel
               - bedrock:InvokeModelWithResponseStream
+              - bedrock:ListInferenceProfiles
             Resource:
               - arn:aws:bedrock:*::foundation-model/anthropic.claude-v2
               - arn:aws:bedrock:*::foundation-model/anthropic.claude-v2:1
               - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0
-              - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-haiku-20240307-v1:0
-              - arn:aws:bedrock:*::foundation-model/ai21.j2-mid-v1
-              - arn:aws:bedrock:*::foundation-model/ai21.j2-ultra-v1
               - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-5-sonnet-20240620-v1:0
+              - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-5-sonnet-20241022-v2:0
+              - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-haiku-20240307-v1:0
+              - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-5-haiku-20241022-v1:0
+              - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-opus-20240229-v1:0
+              - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-7-sonnet-20250219-v1:0
               - arn:aws:bedrock:*::foundation-model/meta.llama3-1-405b-instruct-v1:0
+              - arn:aws:bedrock:*:*:inference-profile/*
       Tags:
         - Key: ApplicationName
           Value: SAP ABAP Assistant
+
+  RolesAnywhereRole:
+    Type: AWS::IAM::Role
+    Condition: IsIAMRolesAnywhere
+    Properties:
+      # RoleName: !Ref RoleName
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: rolesanywhere.amazonaws.com
+            Action:
+              - sts:AssumeRole
+              - sts:TagSession
+              - sts:SetSourceIdentity
+      Policies:
+        - PolicyName: BedrockModelAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: AllowInvokeModel
+                Effect: Allow
+                Action: 
+                  - bedrock:InvokeModelWithResponseStream
+                  - bedrock:ListInferenceProfiles
+                Resource:
+                  - arn:aws:bedrock:*::foundation-model/anthropic.claude-v2
+                  - arn:aws:bedrock:*::foundation-model/anthropic.claude-v2:1
+                  - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0
+                  - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-5-sonnet-20240620-v1:0
+                  - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-5-sonnet-20241022-v2:0
+                  - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-haiku-20240307-v1:0
+                  - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-5-haiku-20241022-v1:0
+                  - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-opus-20240229-v1:0
+                  - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-7-sonnet-20250219-v1:0
+                  - arn:aws:bedrock:*::foundation-model/meta.llama3-1-405b-instruct-v1:0
+                  - arn:aws:bedrock:*:*:inference-profile/*
+      Tags:
+        - Key: Name
+          Value: !Ref RoleName
+
 Outputs:
   PermissionSetArn:
+    Condition: IsIAMIdentityCenter
     Description: The ARN of the created permission set
     Value: !Ref PermissionSet
+
+  RoleArn:
+    Condition: IsIAMRolesAnywhere
+    Description: The ARN of the created IAM Role
+    Value: !GetAtt RolesAnywhereRole.Arn
