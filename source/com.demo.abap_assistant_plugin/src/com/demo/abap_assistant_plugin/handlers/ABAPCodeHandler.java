@@ -64,7 +64,7 @@ public class ABAPCodeHandler extends AbstractHandler {
 
 				IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				IEditorPart activeEditor = activePage.getActiveEditor();
-
+								
 				if (activeEditor instanceof MultiPageEditorPart) {
 					ITextEditor texteditor = (ITextEditor) ((MultiPageEditorPart) activeEditor).getSelectedPage();
 
@@ -83,7 +83,6 @@ public class ABAPCodeHandler extends AbstractHandler {
 								try {
 
 									String selectedText = textSelection.getText().replaceAll("\\*", "").trim();
-									//System.out.println("promptText = " + selectedText);
 									int offset = textSelection.getOffset() + textSelection.getLength();
 									
 									if (!selectedText.equalsIgnoreCase("")) {
@@ -91,30 +90,20 @@ public class ABAPCodeHandler extends AbstractHandler {
 										String result = "";
 										String modelID = ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_MODEL_ID);
 										
-										// Anthropic Claude, Meta and Mistral Foundation Models
+										// Call Amazon Bedrock Foundation Models
 										if (ABAPAssistantHelper.isModelSupported(modelID)) {
 											String prompt = ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_CODE) + selectedText;
-											result = ABAPAssistantModelHelper.invokeBedrockModels(prompt, modelID);
+											result = ABAPAssistantModelHelper.invokeBedrockModels(prompt, modelID); 
 											doc.replace(offset, 0, "\n" + result + "\n");
-										}										
-										// AI21 Jurassic Model
-										else if (modelID.equalsIgnoreCase(ABAPAssistantConstants.JURASSIC_MODEL_ID_MID)
-												|| modelID.equalsIgnoreCase(ABAPAssistantConstants.JURASSIC_MODEL_ID_ULTRA)) {
-											String prompt = ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_CODE) + selectedText;
-											result = ABAPAssistantModelHelper.invokeJurassicModels(prompt, modelID);
-											doc.replace(offset, 0, "\n" + result + "\n");
-										}
+										}									
 										
-										// Custom logic - Additional foundation model implementations if required go here within else if
+										// Custom logic - Additional foundation model implementations if required go here
 
 										else {
-											MessageDialog.openError(window.getShell(),
-													ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,
-													"Invalid model. Please check your settings.");
+											MessageDialog.openError(window.getShell(),ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,"Invalid model. Please check your settings.");
 										}
 									} else {
-										MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,
-												"Text not selected");
+										MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,"Text not selected");
 									}
 
 								} catch (BadLocationException e) {
@@ -140,23 +129,19 @@ public class ABAPCodeHandler extends AbstractHandler {
 					}
 
 				} else {
-					MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,
-							"ABAP Assistant plugin is not supported in this editor");
+					MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,"ABAP Assistant plugin is not supported in this editor");
 				}
 			} else {
-				MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,
-						"ABAP Assistant preferences are not set in eclipse");
+				MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,"ABAP Assistant preferences are not set in eclipse");
 			}
 		} catch (StorageException e) {
 			e.printStackTrace();
 			logger.log(new Status(Status.ERROR, bundle.getSymbolicName(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE+ ":" +e.getLocalizedMessage(),e));
-			MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,
-					"Error: " + e.getLocalizedMessage());
+			MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,"Error: " + e.getLocalizedMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.log(new Status(Status.ERROR, bundle.getSymbolicName(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE+ ":" +e.getLocalizedMessage(),e));
-			MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,
-					"Error: " + e.getLocalizedMessage());
+			MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,"Error: " + e.getLocalizedMessage());
 		}
 		return null;
 		

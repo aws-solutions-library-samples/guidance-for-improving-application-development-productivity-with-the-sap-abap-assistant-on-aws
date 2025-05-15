@@ -80,38 +80,27 @@ public class ABAPDocumentationHandler extends AbstractHandler {
 
 								try {
 									String selectedText = textSelection.getText().trim();;
-									//System.out.println("promptText = " + selectedText);
 									
 									if (!selectedText.equalsIgnoreCase("")) {
 	
 										String result = "";
-										String modelID = ABAPAssistantHelper
-												.getPreferences(ABAPAssistantConstants.PREFERENCES_MODEL_ID);
+										String modelID = ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_MODEL_ID);
 
-										// Anthropic Claude and Meta Foundation Models
+										// Call Amazon Bedrock Foundation Models
 										if (ABAPAssistantHelper.isModelSupported(modelID)) {
 											String prompt = ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_DOC) + selectedText;
-											result = ABAPAssistantModelHelper.invokeBedrockModels(prompt, modelID);
-											ABAPAssistantHelper.writeToConsole(result, activePage);
-										}
-										//AI21 Jurassic Model
-										else if (modelID.equalsIgnoreCase(ABAPAssistantConstants.JURASSIC_MODEL_ID_MID) 
-												|| modelID.equalsIgnoreCase(ABAPAssistantConstants.JURASSIC_MODEL_ID_ULTRA)) {
-											String prompt = ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_PROMPT_DOC) + selectedText;
-											result = ABAPAssistantModelHelper.invokeJurassicModels(prompt, modelID);
+											result = ABAPAssistantModelHelper.invokeBedrockModels(prompt, modelID);									
 											ABAPAssistantHelper.writeToConsole(result, activePage);
 										}
 										
-										// Custom logic - Additional foundation model implementations if required go here within else if
+										// Custom logic - Additional foundation model implementations if required go here 
 										
 										else {
 											MessageDialog.openError(window.getShell(),
-													ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,
-													"Invalid model. Please check your settings.");
+													ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,"Invalid model. Please check your settings.");
 										}
 									} else {
-										MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,
-												"Text not selected");
+										MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,"Text not selected");
 									}
 
 								} catch (JSONException e) {
@@ -133,12 +122,10 @@ public class ABAPDocumentationHandler extends AbstractHandler {
 					}
 
 				} else {
-					MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,
-							"ABAP Assistant plugin is not supported in this editor");
+					MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,"ABAP Assistant plugin is not supported in this editor");
 				}
 			} else {
-				MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,
-						"ABAP Assistant preferences are not set in eclipse");
+				MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE,"ABAP Assistant preferences are not set in eclipse");
 			}
 		} catch (StorageException e) {
 			e.printStackTrace();
@@ -146,7 +133,7 @@ public class ABAPDocumentationHandler extends AbstractHandler {
 			MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE, "Error: " + e.getLocalizedMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.log(new Status(Status.ERROR, bundle.getSymbolicName(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE+ ":" +e.getLocalizedMessage(),e));									logger.log(new Status(Status.ERROR, bundle.getSymbolicName(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE+ ":" +e.getLocalizedMessage(),e));
+			logger.log(new Status(Status.ERROR, bundle.getSymbolicName(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE+ ":" +e.getLocalizedMessage(),e));		
 			MessageDialog.openError(window.getShell(), ABAPAssistantConstants.ECLIPSE_DIALOG_TITLE, "Error: " + e.getLocalizedMessage());
 		}
 		return null;

@@ -18,27 +18,20 @@
 
 package com.demo.abap_assistant_plugin.helpers;
 
-import java.util.concurrent.ExecutionException;
-
 import org.eclipse.equinox.security.storage.StorageException;
-import org.json.JSONException;
-import org.json.JSONObject;
-import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.services.bedrockruntime.BedrockRuntimeAsyncClient;
-import software.amazon.awssdk.services.bedrockruntime.BedrockRuntimeClient;
 import software.amazon.awssdk.services.bedrockruntime.model.ContentBlock;
 import software.amazon.awssdk.services.bedrockruntime.model.ConversationRole;
 import software.amazon.awssdk.services.bedrockruntime.model.ConverseStreamResponseHandler;
-import software.amazon.awssdk.services.bedrockruntime.model.InvokeModelRequest;
-import software.amazon.awssdk.services.bedrockruntime.model.InvokeModelResponse;
 import software.amazon.awssdk.services.bedrockruntime.model.Message;
 
 public class ABAPAssistantModelHelper {
 	
+	
 	// Invoke Amazon Bedrock Foundation Models	
-	public static String invokeBedrockModels(String prompt, String modelID) throws StorageException, InterruptedException, ExecutionException {
+	public static String invokeBedrockModels(String prompt, String modelID) throws Exception {
 		
-		BedrockRuntimeAsyncClient client =  ABAPAssistantHelper.getBedrockAsyncClient();
+		BedrockRuntimeAsyncClient client =  ABAPAssistantHelper.getBedrockRuntimeAsyncClient();
 		
 		 Message message = Message.builder()
 	             .content(ContentBlock.fromText(prompt))
@@ -56,15 +49,20 @@ public class ABAPAssistantModelHelper {
 	                         completeResponseTextBuffer.append(responseText);
 	                     }).build()
 	             ).build();
-
+	     
          // Send the message with inference configuration and attach the handler.
          client.converseStream(request -> request
                  .modelId(modelID)
                  .messages(message)
-                 .inferenceConfig(config -> config
-                         .maxTokens(4096)
-                         .temperature(0.2F)
-                         .topP(0.2F)
+                 .inferenceConfig(config -> {
+					try {
+						config
+						         .maxTokens(Integer.parseInt(ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_MAX_TOKENS).trim()))
+						         .temperature(Float.parseFloat(ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_TEMPERATURE).trim()))
+						         .topP(Float.parseFloat(ABAPAssistantHelper.getPreferences(ABAPAssistantConstants.PREFERENCES_TOP_P).trim()));
+					} catch (NumberFormatException | StorageException e) {
+					}
+				}
 
                  ), responseStreamHandler).get();
          
@@ -72,36 +70,6 @@ public class ABAPAssistantModelHelper {
          return completeResponseTextBuffer.toString();
 		
 	}
-	
-	// Invoke AI21 Jurassic Model
-	public static String invokeJurassicModels(String prompt, String modelID) throws JSONException, StorageException {
-		
-        BedrockRuntimeClient client =  ABAPAssistantHelper.getBedrockClient();
-
-        String payload = new JSONObject().put("prompt", prompt)
-				.put("temperature", 0.2)
-				.put("topP", 0.2)
-				.put("maxTokens", 8191).toString();
-
-        // Encode and send the request to the Bedrock Runtime.
-        InvokeModelRequest request = InvokeModelRequest.builder()
-                .body(SdkBytes.fromUtf8String(payload))
-                .modelId(modelID)
-                .contentType("application/json")
-                .accept("application/json")
-                .build();
-
-        InvokeModelResponse response = client.invokeModel(request);
-
-        // Decode the response body.
-        JSONObject responseBody = new JSONObject(response.body().asUtf8String());
-        
-        // Retrieve the generated text from the model's response.
-        String result =  responseBody.getJSONArray("completions").getJSONObject(0).getJSONObject("data").getString("text");
-        
-        return result;
-
-    }
 	
 	// Custom logic - Functions for invoking other foundation models if required go here 
 	
