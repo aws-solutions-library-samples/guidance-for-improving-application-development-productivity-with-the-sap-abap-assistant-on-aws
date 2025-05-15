@@ -35,26 +35,65 @@ public class ABAPAssistantConstants {
 	public static final String PREFERENCES_AWS_PROFILE = "AWS-PROFILE";	
 	public static final String PREFERENCES_PROMPT_CODE = "PROMPT-CODE";	
 	public static final String PREFERENCES_PROMPT_DOC = "PROMPT-DOC";	
+	public static final String PREFERENCES_IDENTITY_CENTER = "USE-IDENTITY-CENTER";
+	public static final String PREFERENCES_ROLES_ANYWHERE = "USE-ROLES-ANYWHERE";
+	public static final String PREFERENCES_PKCS_12_CERTIFICATE = "PKCS-12-CERTIFICATE";
+	public static final String PREFERENCES_PKCS_12_KEY_ALIAS = "PKCS-12-KEY-ALIAS";
+	public static final String PREFERENCES_PKCS_12_KEYSTORE_PASSWORD = "PKCS-12-KEYSTORE-PASSWORD";
+	public static final String PREFERENCES_RLA_TRUST_ANCHOR = "RLA-TRUST-ANCHOR";
+	public static final String PREFERENCES_RLA_PROFILE_ARN = "RLA-PROFILE-ARN";
+	public static final String PREFERENCES_RLA_ROLE_ARN = "RLA-ROLE-ARN";
+	public static final String PREFERENCES_TEMPERATURE = "TEMPERATURE";
+	public static final String PREFERENCES_TOP_P = "TOP_P";
+	public static final String PREFERENCES_MAX_TOKENS = "MAX-TOKENS";
+
+	public static final String PREFERENCES_GENERAL_GROUP_NAME = "General configurations";
+	public static final String PREFERENCES_AUTH_GROUP_NAME = "Authentication Options";
+	public static final String PREFERENCES_AUTH_GROUP_TEXT = "Select the Authentication option and fill the corresponding fields";
+	
+	public static final String PREFERENCES_AWS_REGION_LINK_TEXT = "<a>Click to find AWS Region code</a>";
+	public static final String PREFERENCES_AWS_REGION_LINK_URL = "https://docs.aws.amazon.com/global-infrastructure/latest/regions/aws-regions.html";
+
+	public static final String PREFERENCES_MODEL_ID_LINK_TEXT = "<a>Click to find Bedrock Foundation Model ID</a>";
+	public static final String PREFERENCES_MODEL_ID_LINK_URL = "https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html";
+	public static final String PREFERENCES_MODEL_CROSS_REGION_LINK_TEXT = "<a>Click to find cross region inference profiles</a>";
+	public static final String PREFERENCES_MODEL_CROSS_REGION_LINK_URL = "https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html#inference-profiles-support-system";
+	
+	public static final String PREFERENCES_AUTH_IDC_OPTION = "IAM Identity Center";
+	public static final String PREFERENCES_AUTH_RLA_OPTION = "IAM Roles Anywhere";
+	public static final String PREFERENCES_AWS_REGION_FIELD_NAME = "AWS Region";
+	public static final String PREFERENCES_MODEL_ID_FIELD_NAME = "Model ID";
+	public static final String PREFERENCES_AWS_PROFILE_FIELD_NAME = "AWS Profile";	
+	public static final String PREFERENCES_PROMPT_CODE_FIELD_NAME = "Prompt for ABAP Code";	
+	public static final String PREFERENCES_PROMPT_DOC_FIELD_NAME = "Prompt for Documentation";	
+	public static final String PREFERENCES_PKCS_12_CERTIFICATE_FIELD_NAME = "PKCS12 Certificate		";
+	public static final String PREFERENCES_PKCS_12_KEY_ALIAS_FIELD_NAME = "PKCS12 Key Alias";
+	public static final String PREFERENCES_PKCS_12_KEYSTORE_PASSWORD_FIELD_NAME = "PKCS12 KeyStore Password";
+	public static final String PREFERENCES_RLA_TRUST_ANCHOR_FIELD_NAME = "Trust Anchor";
+	public static final String PREFERENCES_RLA_PROFILE_ANCHOR_ARN_FIELD_NAME = "Profile ARN";
+	public static final String PREFERENCES_RLA_PROFILE_ROLE_ARN_FIELD_NAME = "Role ARN";
+	public static final String PREFERENCES_TEMPERATURE_FIELD_NAME = "Temperature";
+	public static final String PREFERENCES_TOP_P_FIELD_NAME = "Top P";
+	public static final String PREFERENCES_MAX_TOKENS_FIELD_NAME = "Maximum length";
+
 
 	// Eclipse preferences Default constants
 	public static final String PREFERENCES_AWS_REGION_DEFAULT = "us-east-1";
 	public static final String PREFERENCES_MODEL_ID_DEFAULT = "anthropic.claude-v2";
 	public static final String PREFERENCES_AWS_PROFILE_DEFAULT = "abap-assistant";
-	
+
 	// Model ID Constants
-	public static final String CLAUDE_MODEL_ID_V2 = "anthropic.claude-v2";
-	public static final String CLAUDE_MODEL_ID_V2_1 = "anthropic.claude-v2:1";
-	public static final String CLAUDE3_MODEL_ID_SONNET = "anthropic.claude-3-sonnet-20240229-v1:0";
-	public static final String CLAUDE3_MODEL_ID_HAIKU= "anthropic.claude-3-haiku-20240307-v1:0";
-	public static final String CLAUDE3_5_MODEL_ID_SONNET = "anthropic.claude-3-5-sonnet-20240620-v1:0";
-	
-	public static final String JURASSIC_MODEL_ID_MID = "ai21.j2-mid-v1";
-	public static final String JURASSIC_MODEL_ID_ULTRA = "ai21.j2-ultra-v1";
-	
+	public static final String CLAUDE_V2_MODEL_ID = "anthropic.claude-v2";
+	public static final String CLAUDE_V2_1_MODEL_ID = "anthropic.claude-v2:1";
+	public static final String CLAUDE_3_SONNET_MODEL_ID = "anthropic.claude-3-sonnet-20240229-v1:0";
+	public static final String CLAUDE_3_HAIKU_MODEL_ID= "anthropic.claude-3-haiku-20240307-v1:0";
+	public static final String CLAUDE_3_5_SONNET_MODEL_ID = "anthropic.claude-3-5-sonnet-20240620-v1:0";
+	public static final String CLAUDE_3_5_SONNET_V2_MODEL_ID = "anthropic.claude-3-5-sonnet-20241022-v2:0";
+	public static final String CLAUDE_3_OPUS_MODEL_ID = "anthropic.claude-3-opus-20240229-v1:0";
+	public static final String CLAUDE_3_5_HAIKU_MODEL_ID = "anthropic.claude-3-5-haiku-20241022-v1:0";
+	public static final String CLAUDE_3_7_MODEL_ID = "anthropic.claude-3-7-sonnet-20250219-v1:0";
 	public static final String META_LLAMA_3_1_405B = "meta.llama3-1-405b-instruct-v1:0";	
 
 	// Custom logic - Additional Model ID constant definitions go here
-	
-	
 
 }
